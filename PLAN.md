@@ -9,7 +9,7 @@ Die Umsetzung beginnt mit einem README im Terminal und wächst anhand gemessener
 ## Fortschritt
 
 - [x] Projektkontext und Architektur dokumentiert
-- [ ] Meilenstein 1 — README einlesen und Abschnitte anzeigen
+- [x] Meilenstein 1 — README einlesen und Abschnitte anzeigen
 - [ ] Meilenstein 2 — Suche und Referenzfragen
 - [ ] Meilenstein 3 — KI-Antwort mit Quellen
 - [ ] Meilenstein 4 — Mehrere öffentliche GitHub-Projekte
@@ -32,6 +32,8 @@ Die Umsetzung beginnt mit einem README im Terminal und wächst anhand gemessener
 **Prüfung** mit einem kurzen Markdown-Beispiel einschließlich Einleitung, Überschriften, langem Abschnitt und Codeblock.
 
 **Übung** — Füge eine Überschrift hinzu und beobachte, wie sich die Abschnitte ändern.
+
+**Verifizierter Stand am 19. November 2026:** Das Python-3.12-Paket liest ein lokales UTF-8-README, trennt Überschriften außerhalb von Codeblöcken und teilt lange Abschnitte an Leerzeilen oder ganzen Zeilen. Die Terminalausgabe enthält Abschnittskennung, Überschrift, Originalzeilen und Text. Das öffentliche `psf/requests`-README ist auf Commit `3c7baaa05ab4aa49cc819ce3a819d260de19c157` fixiert; der lokale Git-Blob-Hash `4e5c44555c02f127cd0cca2efa8b22716c78ee23` stimmt mit dem GitHub-Blob überein. Der dokumentierte Startbefehl zeigte 5 Abschnitte. Sechs Offline-Tests bestanden, darunter Einleitung, langer Abschnitt, Codeblock, unveränderte Zeilen sowie fehlende und leere Datei. Eine einzelne überlange Originalzeile bleibt vollständig und kann das Zeichenlimit überschreiten. Es gibt noch keine Suche und keinen API-Aufruf.
 
 ## Meilenstein 2 — Suche und Referenzfragen
 

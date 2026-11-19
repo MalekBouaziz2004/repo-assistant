@@ -2,7 +2,7 @@
 
 ## Zweck und Status
 
-Dieses Dokument beschreibt die geplante Anwendung. Zum Zeitpunkt der Erstellung befindet sich das Repository in der Planungsphase.
+Dieses Dokument beschreibt den Zielaufbau. Meilenstein 1 ist implementiert: Ein lokales README wird über die Terminaloberfläche eingelesen und in Abschnitte mit Originalzeilen zerlegt. Suche und Generierung sind weiterhin geplant.
 
 Repo Assistant verwendet Dokumentation als Wissensquelle. Der erste Einstieg ist ein Python-Programm im Terminal. Die Dokumentsuche läuft lokal, die spätere Textgenerierung bei Groq im kostenlosen Tarif. Die Architektur benötigt für den ersten Ablauf einen Python-Prozess und Textdateien.
 
@@ -17,7 +17,7 @@ Repo Assistant verwendet Dokumentation als Wissensquelle. Der erste Einstieg ist
 | Suche | Zunächst Wortübereinstimmungen | Einfach messbare Ausgangsversion |
 | Generierung | Groq-Free-Tarif, Modell per Konfiguration | Gehostete Verarbeitung bei einem Budget von 0 Euro |
 | Speicherung | UTF-8-Dateien und JSON-Metadaten | Ausreichend für wenige Dokumente |
-| Verifikation | Kleine Offline-Tests mit pytest und feste Referenzfragen | Wiederholbare Prüfungen ohne API-Verbrauch |
+| Verifikation | Kleine Offline-Tests mit `unittest`; feste Referenzfragen ab Meilenstein 2 | Wiederholbare Prüfungen ohne API-Verbrauch |
 
 Die kostenlose Verfügbarkeit und die Lizenz des gewählten Modells werden bei seiner Auswahl dokumentiert. Groq ist eine technische Ausgangsentscheidung. Ein Anbieterwechsel soll die Dokumentverarbeitung und Referenzfragen weiterverwenden können.
 
