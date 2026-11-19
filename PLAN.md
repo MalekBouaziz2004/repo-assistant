@@ -10,7 +10,7 @@ Die Umsetzung beginnt mit einem README im Terminal und wächst anhand gemessener
 
 - [x] Projektkontext und Architektur dokumentiert
 - [x] Meilenstein 1 — README einlesen und Abschnitte anzeigen
-- [ ] Meilenstein 2 — Suche und Referenzfragen
+- [x] Meilenstein 2 — Suche und Referenzfragen
 - [ ] Meilenstein 3 — KI-Antwort mit Quellen
 - [ ] Meilenstein 4 — Mehrere öffentliche GitHub-Projekte
 - [ ] Meilenstein 5 — Qualität vergleichen und Portfolio-Demo
@@ -33,7 +33,7 @@ Die Umsetzung beginnt mit einem README im Terminal und wächst anhand gemessener
 
 **Übung** — Füge eine Überschrift hinzu und beobachte, wie sich die Abschnitte ändern.
 
-**Verifizierter Stand am 19. November 2026:** Das Python-3.12-Paket liest ein lokales UTF-8-README, trennt Überschriften außerhalb von Codeblöcken und teilt lange Abschnitte an Leerzeilen oder ganzen Zeilen. Die Terminalausgabe enthält Abschnittskennung, Überschrift, Originalzeilen und Text. Das öffentliche `psf/requests`-README ist auf Commit `3c7baaa05ab4aa49cc819ce3a819d260de19c157` fixiert; der lokale Git-Blob-Hash `4e5c44555c02f127cd0cca2efa8b22716c78ee23` stimmt mit dem GitHub-Blob überein. Der dokumentierte Startbefehl zeigte 5 Abschnitte. Sechs Offline-Tests bestanden, darunter Einleitung, langer Abschnitt, Codeblock, unveränderte Zeilen sowie fehlende und leere Datei. Eine einzelne überlange Originalzeile bleibt vollständig und kann das Zeichenlimit überschreiten. Es gibt noch keine Suche und keinen API-Aufruf.
+**Verifizierter Stand nach M1 am 19. November 2026:** Das Python-3.12-Paket liest ein lokales UTF-8-README, trennt Überschriften außerhalb von Codeblöcken und teilt lange Abschnitte an Leerzeilen oder ganzen Zeilen. Die Terminalausgabe enthält Abschnittskennung, Überschrift, Originalzeilen und Text. Das öffentliche `psf/requests`-README ist auf Commit `3c7baaa05ab4aa49cc819ce3a819d260de19c157` fixiert; der lokale Git-Blob-Hash `4e5c44555c02f127cd0cca2efa8b22716c78ee23` stimmt mit dem GitHub-Blob überein. Der dokumentierte Startbefehl zeigte 5 Abschnitte. Sechs Offline-Tests bestanden, darunter Einleitung, langer Abschnitt, Codeblock, unveränderte Zeilen sowie fehlende und leere Datei. Eine einzelne überlange Originalzeile bleibt vollständig und kann das Zeichenlimit überschreiten. Zu diesem Zeitpunkt gab es noch keine Suche und keinen API-Aufruf.
 
 ## Meilenstein 2 — Suche und Referenzfragen
 
@@ -52,6 +52,10 @@ Die Umsetzung beginnt mit einem README im Terminal und wächst anhand gemessener
 **Prüfung** von Trefferrangfolge, Gleichstand, leerer Frage und fehlenden Treffern.
 
 **Übung** — Vergleiche „record payments“ und „Zahlungen verbuchen“ bei einem englischen Dokument.
+
+**Verifizierter Stand nach M2 am 19. November 2026:** `data/evaluation/questions.json` enthält zehn vor der Suchimplementierung festgelegte Fragen zum gepinnten Requests-README: acht mit geprüften Originalzeilen und zwei als „im Dokument unbeantwortbar“. Die Fragen sind deutsch und englisch. Die lokale Suche zählt unterschiedliche normalisierte Wortüberschneidungen zwischen Frage und Chunk-Überschrift samt Text. Gleichstände werden nach Originalzeile und Abschnittskennung geordnet; ohne Wortüberschneidung gibt es keinen Treffer. Der Terminalbefehl `python -m repo_assistant.cli --question "How do I install Requests with pip?"` zeigte den Installationsbeleg aus Zeilen 30–39 auf Rang 1 mit Wertung 3 und gepinntem Quellenlink. `python -m repo_assistant.cli --question "Kann die Bibliothek Verbindungen wiederverwenden?"` zeigte keinen Treffer, obwohl Zeile 44 die fachlich passende englische Stelle „Keep-Alive & Connection Pooling“ enthält. Das ist die dokumentierte Sprachgrenze dieser Ausgangsversion.
+
+Der reproduzierbare Befehl `python -m repo_assistant.cli --evaluate` prüfte zuerst den Datei-Hash und ergab **Recall@3 = 7/8 = 87,5 %** bei 1200 Zeichen pro Chunk. Q01–Q04 und Q06–Q08 fanden ihren vollständigen Beleg auf Rang 1; Q05 fand keinen Beleg. Q09 und Q10 sind unbeantwortbar und wurden aus Recall@3 ausgeschlossen; für beide lieferte die Wortsuche trotzdem drei Treffer. Die Wertung ist keine Antwortwahrscheinlichkeit, und diese Messung bewertet keine generierte Antwort. Alle zwölf Offline-Tests, einschließlich der sechs M1-Tests, bestanden ohne API-Schlüssel und ohne Anbieteraufruf.
 
 ## Meilenstein 3 — Antworten mit einer kostenlosen KI-API
 

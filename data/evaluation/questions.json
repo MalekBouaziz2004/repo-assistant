@@ -1,0 +1,81 @@
+{
+  "document_id": "requests.README",
+  "document_path": "data/documents/requests.README.md",
+  "repository_url": "https://github.com/psf/requests",
+  "source_path": "README.md",
+  "commit": "3c7baaa05ab4aa49cc819ce3a819d260de19c157",
+  "blob_sha": "4e5c44555c02f127cd0cca2efa8b22716c78ee23",
+  "max_chars": 1200,
+  "questions": [
+    {
+      "id": "Q01",
+      "language": "en",
+      "question": "How do I install Requests with pip?",
+      "expected_answer": "python -m pip install requests",
+      "evidence": [{"start_line": 34, "end_line": 36}]
+    },
+    {
+      "id": "Q02",
+      "language": "en",
+      "question": "Which Python versions does Requests officially support?",
+      "expected_answer": "Python 3.10+.",
+      "evidence": [{"start_line": 38, "end_line": 38}]
+    },
+    {
+      "id": "Q03",
+      "language": "en",
+      "question": "Which method is recommended for JSON data?",
+      "expected_answer": "The json method.",
+      "evidence": [{"start_line": 26, "end_line": 26}]
+    },
+    {
+      "id": "Q04",
+      "language": "de",
+      "question": "Unterstützt Requests SOCKS-Proxys?",
+      "expected_answer": "Ja, SOCKS Proxy Support wird aufgeführt.",
+      "evidence": [{"start_line": 52, "end_line": 52}]
+    },
+    {
+      "id": "Q05",
+      "language": "de",
+      "question": "Kann die Bibliothek Verbindungen wiederverwenden?",
+      "expected_answer": "Ja, Keep-Alive und Connection Pooling werden aufgeführt.",
+      "evidence": [{"start_line": 44, "end_line": 44}]
+    },
+    {
+      "id": "Q06",
+      "language": "en",
+      "question": "Which authentication methods does Requests support?",
+      "expected_answer": "Basic and Digest Authentication.",
+      "evidence": [{"start_line": 48, "end_line": 48}]
+    },
+    {
+      "id": "Q07",
+      "language": "en",
+      "question": "How do I apply the badTimezone setting globally in Git config?",
+      "expected_answer": "git config --global fetch.fsck.badTimezone ignore",
+      "evidence": [{"start_line": 68, "end_line": 72}]
+    },
+    {
+      "id": "Q08",
+      "language": "de",
+      "question": "Wie klone ich das Requests-Repository bei einem badTimezone-Fehler?",
+      "expected_answer": "git clone -c fetch.fsck.badTimezone=ignore https://github.com/psf/requests.git",
+      "evidence": [{"start_line": 60, "end_line": 66}]
+    },
+    {
+      "id": "Q09",
+      "language": "en",
+      "question": "Who is the current lead maintainer of Requests?",
+      "expected_answer": "im Dokument unbeantwortbar",
+      "evidence": []
+    },
+    {
+      "id": "Q10",
+      "language": "de",
+      "question": "Welche Lizenz hat Requests?",
+      "expected_answer": "im Dokument unbeantwortbar",
+      "evidence": []
+    }
+  ]
+}

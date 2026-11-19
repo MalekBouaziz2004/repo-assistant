@@ -2,7 +2,7 @@
 
 ## Zweck und Status
 
-Dieses Dokument beschreibt den Zielaufbau. Meilenstein 1 ist implementiert: Ein lokales README wird über die Terminaloberfläche eingelesen und in Abschnitte mit Originalzeilen zerlegt. Suche und Generierung sind weiterhin geplant.
+Dieses Dokument beschreibt den Zielaufbau. Meilensteine 1 und 2 sind implementiert: Ein lokales README wird über die Terminaloberfläche in Abschnitte mit Originalzeilen zerlegt und nach Wortüberschneidungen durchsucht. Die Offline-Auswertung verwendet zehn feste Referenzfragen. Generierung ist weiterhin geplant.
 
 Repo Assistant verwendet Dokumentation als Wissensquelle. Der erste Einstieg ist ein Python-Programm im Terminal. Die Dokumentsuche läuft lokal, die spätere Textgenerierung bei Groq im kostenlosen Tarif. Die Architektur benötigt für den ersten Ablauf einen Python-Prozess und Textdateien.
 
@@ -46,7 +46,7 @@ Die Einträge werden mit dem jeweils passenden Meilenstein angelegt.
 | .env.example | Konfigurationsnamen mit leeren Beispielwerten |
 | pyproject.toml | Python-Paket und benötigte Abhängigkeiten |
 
-Für Meilenstein 1 genügen Dokumentverarbeitung, CLI und zugehörige Prüfungen. Eine einfache Funktion pro fachlicher Aufgabe reicht zunächst aus. Ausführbare Befehle werden erst zusammen mit ihrer Implementierung im README dokumentiert.
+Für Meilenstein 1 genügten Dokumentverarbeitung, CLI und zugehörige Prüfungen. Meilenstein 2 ergänzt Retrieval, Offline-Auswertung und Referenzfragen. Ausführbare Befehle stehen zusammen mit ihrer Implementierung im README.
 
 ## Daten und Quellen
 
