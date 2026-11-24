@@ -3,9 +3,11 @@
 import argparse
 import json
 from pathlib import Path
+import sys
 
 from .documents import read_document, split_markdown
-from .evaluation import evaluate, load_questions
+from .evaluation import evaluate, git_blob_sha, load_questions
+from .generation import GenerationError, GroqClient, generate_answer
 from .retrieval import search
 
 
@@ -21,6 +23,14 @@ def _source(path: Path, start_line: int, end_line: int) -> str:
     return f"{path}:L{start_line}-L{end_line}"
 
 
+def _show_passages(hits, path: Path) -> None:
+    print("Gefundene Textstellen zur eigenen Prüfung:")
+    for hit in hits:
+        chunk = hit.chunk
+        print(f"- [{chunk.chunk_id}] {chunk.heading}, {path}:L{chunk.start_line}-L{chunk.end_line}")
+        print(chunk.text)
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description="README in Abschnitte mit Originalzeilen aufteilen")
     parser.add_argument("path", nargs="?", type=Path, default=DEFAULT_DOCUMENT, help="Pfad zur Markdown-Datei")
@@ -28,6 +38,8 @@ def main() -> int:
     action = parser.add_mutually_exclusive_group()
     action.add_argument("--question", help="Frage stellen und bis zu drei Suchtreffer anzeigen")
     action.add_argument("--evaluate", action="store_true", help="Zehn Referenzfragen offline auswerten")
+    action.add_argument("--answer", help="Mit Groq aus gefundenen Passagen antworten")
+    action.add_argument("--live-test", action="store_true", help="Bewusster Live-Test mit Referenzfrage Q01 (ein API-Aufruf)")
     args = parser.parse_args()
     try:
         text = read_document(args.path)
@@ -39,6 +51,13 @@ def main() -> int:
             result = evaluate(reference, chunks)
         elif args.question is not None:
             hits = search(args.question, chunks)
+        elif args.answer is not None or args.live_test:
+            if args.live_test:
+                reference = load_questions(DEFAULT_QUESTIONS, args.path, text)
+                answer_question = reference["questions"][0]["question"]
+            else:
+                answer_question = args.answer
+            hits = search(answer_question, chunks)
     except ValueError as error:
         parser.exit(2, f"Fehler: {error}\n")
 
@@ -54,6 +73,37 @@ def main() -> int:
                 outcome = f"Beleg auf Rang {case.matching_rank}"
             print(f"{case.question_id}: {outcome}")
         print(f"Recall@3: {result.found}/{result.answerable} = {result.recall_at_3:.1%}")
+        return 0
+
+    if args.answer is not None or args.live_test:
+        if not hits:
+            print("Keine passenden Textstellen gefunden. Die Frage bleibt unbeantwortet; kein API-Aufruf.")
+            return 0
+        try:
+            if args.path.resolve() != DEFAULT_DOCUMENT.resolve():
+                raise GenerationError("KI-Antworten sind derzeit nur für das mitgelieferte öffentliche README verfügbar.")
+            metadata = json.loads(DEFAULT_SOURCE.read_text(encoding="utf-8"))
+            if metadata["document_id"] != args.path.stem or metadata["blob_sha"] != git_blob_sha(text):
+                raise GenerationError("Das README stimmt nicht mit der gespeicherten öffentlichen Quelle überein.")
+            client = GroqClient.from_environment()
+            result = generate_answer(answer_question, hits, client, metadata["source_url"])
+        except (OSError, ValueError, KeyError) as error:
+            print("Fehler: Die Quelldaten sind nicht lesbar oder unvollständig.", file=sys.stderr)
+            _show_passages(hits, args.path)
+            return 1
+        except GenerationError as error:
+            print(f"Fehler: {error}", file=sys.stderr)
+            _show_passages(hits, args.path)
+            return 1
+        print(f"Antwort: {result.answer}")
+        if result.sources:
+            print("Quellen:")
+            for source in result.sources:
+                print(f"- [{source.source_id}] {source.url}")
+        else:
+            _show_passages(hits, args.path)
+        if args.live_test:
+            print("Live-Test: Antwort empfangen und Quellenkennungen geprüft; Inhalt manuell prüfen.")
         return 0
 
     if args.question is not None:

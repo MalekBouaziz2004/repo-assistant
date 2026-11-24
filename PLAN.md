@@ -11,7 +11,7 @@ Die Umsetzung beginnt mit einem README im Terminal und wächst anhand gemessener
 - [x] Projektkontext und Architektur dokumentiert
 - [x] Meilenstein 1 — README einlesen und Abschnitte anzeigen
 - [x] Meilenstein 2 — Suche und Referenzfragen
-- [ ] Meilenstein 3 — KI-Antwort mit Quellen
+- [x] Meilenstein 3 — KI-Antwort mit Quellen (offline implementiert; Live-Prüfung offen)
 - [ ] Meilenstein 4 — Mehrere öffentliche GitHub-Projekte
 - [ ] Meilenstein 5 — Qualität vergleichen und Portfolio-Demo
 
@@ -74,6 +74,14 @@ Der reproduzierbare Befehl `python -m repo_assistant.cli --evaluate` prüfte zue
 **Fertig**, wenn eine dokumentierte Frage eine belegte Antwort liefert und Fehlerfälle offline mit einem simulierten Client geprüft sind. Ist kein Zugang vorhanden, dokumentiere die Live-Prüfung als ausstehend.
 
 **Übung** — Vergleiche eine Antwort mit vollständigem und eine mit unpassendem Kontext.
+
+**Verifizierter Stand nach M3 am 24. November 2026:** Der eigene Terminalbefehl `--answer` verwendet die unveränderte Wortsuche und bis zu drei Treffer. Er sendet nur Frage, ausgewählte öffentliche Passagen mit `S1` bis `S3` und Arbeitsanweisungen an Groq. Vor dem Aufruf werden die lokale README-Version und Herkunft geprüft. Ein Prompt ist auf 12.000 Zeichen Kontext und 1.000 Zeichen Frage begrenzt; die Anfrage auf 500 Completion-Tokens und 30 Sekunden. Die Implementierung verwendet `urllib` aus der Standardbibliothek und führt keine automatischen Wiederholungen aus. Bei null Treffern gibt es keinen Anbieteraufruf. Bei Modell-, Schlüssel-, Tarif-, Rate-Limit-, Netzwerk- oder Zeitfehlern bleiben die Suchpassagen sichtbar. Die Antwort kommt als JSON mit `answerable`, `answer` und `sources`; Quellenkennungen werden gegen den tatsächlich übertragenen Kontext geprüft und Links aus `requests.source.json` gebildet. Diese Prüfung kontrolliert nur die Zuordnung, nicht die inhaltliche Belegtreue.
+
+**Modellauswahl:** Anbieter Groq, dokumentierter Startwert `openai/gpt-oss-20b`. Am 24. November 2026 nennt [Groq das Modell im Free-Plan](https://console.groq.com/docs/rate-limits) und in der [Modellübersicht](https://console.groq.com/docs/models); die früher vorgesehenen Llama-Modelle sind laut [Deprecation-Dokument](https://console.groq.com/docs/deprecations) für Free-Konten abgeschaltet. [OpenAI nennt Apache 2.0 für die offenen Modellgewichte](https://openai.com/open-models/). Diese Lizenz sagt nichts über dauerhafte oder unbegrenzte Gratisnutzung der Groq-API. Modellname und Schlüssel kommen ausschließlich aus Umgebungsvariablen; `.env.example` enthält leere Werte, `.env` ist durch Git ignoriert. Der Live-Aufruf verlangt zusätzlich die nach Konto-Prüfung gesetzte Free-Tarif-Bestätigung.
+
+**Offline-Verifikation:** Q01 wurde mit simuliertem Client korrekt als Installationsbefehl und gültigem `S1`-Link auf Zeilen 30–39 ausgegeben. Q05 („Verbindungen wiederverwenden“) hatte keinen Worttreffer und keinen Client-Aufruf. Q10 (Lizenz) hatte Worttreffer; die simulierte Antwort enthielt eine klare Nichtbeantwortbarkeit. Unbekannte oder fehlende Quellenkennungen sowie API-Fehler wurden offline geprüft; die echten Treffer bleiben bei Fehlern verfügbar. Alle 23 Offline-Tests bestanden. Die M1- und M2-Befehle samt Recall@3 = 7/8 bleiben erhalten. `git check-ignore .env` bestätigte, dass die lokale Schlüsseldatei ignoriert wird; `.env.example` enthält nur leere Werte.
+
+**Offene Live-Prüfung:** Im aktuellen Umfeld sind weder `GROQ_API_KEY` noch `GROQ_MODEL` gesetzt, und ein Free-Konto ist nicht bestätigt. Deshalb wurde kein Groq-Aufruf ausgeführt. `--live-test` ist als bewusster Einzelaufruf für Q01 dokumentiert. Danach sind die zehn Referenzfragen auf Aussagen, inhaltlich passende Belege und angemessene Nichtbeantwortbarkeit manuell zu prüfen; insbesondere Q01, Q05 und Q10. Die Eignung des Zeichenbudgets für das tatsächliche Tokenlimit ist ebenfalls offen.
 
 ## Meilenstein 4 — Mehrere öffentliche GitHub-Projekte
 

@@ -4,24 +4,24 @@
 
 Malek ist Informatikstudent mit Erfahrung in C++, Java und Webentwicklung. Er nutzt KI im Alltag und möchte die Grundlagen von KI und generativer KI durch eigene Projekte verstehen. Codex unterstützt die Implementierung und erklärt die Entscheidungen verständlich auf Deutsch.
 
-Repo Assistant beantwortet Fragen zu Softwareprojekten anhand ihrer Dokumentation. Die erste Version verarbeitet ein README, findet passende Abschnitte und beantwortet Fragen mit überprüfbaren Quellen. Eine spätere Version unterstützt mehrere öffentliche GitHub-Repositories.
+Repo Assistant verarbeitet zunächst ein öffentliches README, findet passende Abschnitte und kann daraus über Groq eine Antwort mit überprüfbaren Quellenkennungen erzeugen. Eine spätere Version unterstützt mehrere öffentliche GitHub-Repositories.
 
-Ein Beispiel ist die Frage „Wie starte ich SplitIt?“. Die Anwendung findet den Abschnitt zum Start mit Docker und verwendet ihn als Grundlage der Antwort.
+Ein aktuelles Beispiel ist „How do I install Requests with pip?“: Die Suche findet den Installationsabschnitt und übergibt ihn mit einer Quellenkennung an die Generierung. Die Frage „Wie starte ich SplitIt?“ ist ein mögliches Beispiel für die spätere Mehr-Repository-Version.
 
 ## Verbindliche Rahmenbedingungen
 
 - Das Projektbudget beträgt 0 Euro. Verwende kostenlose Software und kostenlose API-Tarife. Kostenpflichtige Infrastruktur, Guthabenkäufe und automatische Wechsel zu bezahlten Angeboten brauchen einen neuen ausdrücklichen Nutzerauftrag.
 - Der Laptop eignet sich laut Nutzer nicht für ein lokales Sprachmodell. Die Textgenerierung erfolgt über eine gehostete API. Die Anwendung und die erste Dokumentsuche laufen auf dem Laptop.
-- Groq im kostenlosen Tarif ist die vorgeschlagene erste Integration. Das konkret verfügbare Modell muss bei der Implementierung anhand der aktuellen Anbieterinformationen und des Nutzerkontos gewählt werden.
+- Groq im kostenlosen Tarif ist die erste Integration. `openai/gpt-oss-20b` ist nach den öffentlichen Anbieterangaben vom 24. November 2026 der dokumentierte Startwert. Die Verfügbarkeit und der Free-Tarif des Nutzerkontos müssen vor einem Live-Aufruf vom Nutzer geprüft werden.
 - Modellname und API-Schlüssel kommen aus Umgebungsvariablen. Halte Schlüssel aus Git, Terminalausgaben, Testdaten und Fehlermeldungen heraus.
 - Die erste Version arbeitet mit öffentlichen Projektdokumenten. Beim Generieren werden Frage und ausgewählte Textstellen an den API-Anbieter übertragen.
 - Open Source und kostenlose API-Nutzung sind unterschiedliche Eigenschaften. Dokumentiere Anbieter und Modell separat und behaupte keine unbegrenzte oder dauerhaft garantierte Gratisnutzung.
 
 ## Stand und Einstieg
 
-Stand am 19. November 2026 ist die Planungsphase. Im Repository gibt es noch keine implementierte Anwendung.
+Stand am 24. November 2026 sind das Einlesen (M1), die Wortsuche samt Offline-Auswertung (M2) und der offline geprüfte Groq-Antwortpfad (M3) implementiert. Ein Live-Aufruf und die inhaltliche Bewertung echter Modellantworten stehen noch aus.
 
-Lies vor einer Implementierung [ARCHITECTURE.md](ARCHITECTURE.md) und [PLAN.md](PLAN.md). Der nächste vorgesehene Auftrag ist Meilenstein 1 aus dem Plan. Ein Nutzerauftrag zur Planung allein beauftragt keine Implementierung.
+Lies vor einer Implementierung [ARCHITECTURE.md](ARCHITECTURE.md) und [PLAN.md](PLAN.md). Ein Nutzerauftrag zur Planung allein beauftragt keine Implementierung. Die nächsten vorgesehenen Arbeiten sind die bewusste Live-Prüfung von M3 bei bestätigtem Free-Zugang und danach Meilenstein 4.
 
 Prüfe bei späteren Arbeiten zuerst den tatsächlichen Code und den Plan. Vermerke abgeschlossene Meilensteine und überprüfbare Ergebnisse in PLAN.md. Trenne dabei bestehende Funktionen und geplante Erweiterungen deutlich.
 

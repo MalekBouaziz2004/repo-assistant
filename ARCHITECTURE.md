@@ -2,9 +2,9 @@
 
 ## Zweck und Status
 
-Dieses Dokument beschreibt den Zielaufbau. Meilensteine 1 und 2 sind implementiert: Ein lokales README wird über die Terminaloberfläche in Abschnitte mit Originalzeilen zerlegt und nach Wortüberschneidungen durchsucht. Die Offline-Auswertung verwendet zehn feste Referenzfragen. Generierung ist weiterhin geplant.
+Dieses Dokument beschreibt den Zielaufbau. Meilensteine 1 und 2 sind implementiert: Ein lokales README wird über die Terminaloberfläche in Abschnitte mit Originalzeilen zerlegt und nach Wortüberschneidungen durchsucht. Die Offline-Auswertung verwendet zehn feste Referenzfragen. Der Antwortpfad aus Meilenstein 3 ist offline implementiert und geprüft; ein echter Groq-Aufruf steht aus.
 
-Repo Assistant verwendet Dokumentation als Wissensquelle. Der erste Einstieg ist ein Python-Programm im Terminal. Die Dokumentsuche läuft lokal, die spätere Textgenerierung bei Groq im kostenlosen Tarif. Die Architektur benötigt für den ersten Ablauf einen Python-Prozess und Textdateien.
+Repo Assistant verwendet Dokumentation als Wissensquelle. Der Einstieg ist ein Python-Programm im Terminal. Die Dokumentsuche läuft lokal, die Textgenerierung bei Groq im kostenlosen Tarif. Dafür werden Frage und ausgewählte öffentliche Passagen übertragen.
 
 ## Entscheidungen
 
@@ -15,7 +15,7 @@ Repo Assistant verwendet Dokumentation als Wissensquelle. Der erste Einstieg ist
 | Quelldaten | Zunächst ein lokales öffentliches README mit Herkunftsdaten | Reproduzierbare Versuche |
 | Zerlegung | Markdown-Abschnitte mit Zeilenangaben und Größenbegrenzung | Nachvollziehbare Quellen und begrenzter Kontext |
 | Suche | Zunächst Wortübereinstimmungen | Einfach messbare Ausgangsversion |
-| Generierung | Groq-Free-Tarif, Modell per Konfiguration | Gehostete Verarbeitung bei einem Budget von 0 Euro |
+| Generierung | Groq-Free-Tarif, `GROQ_MODEL` aus der Umgebung | Gehostete Verarbeitung bei einem Budget von 0 Euro |
 | Speicherung | UTF-8-Dateien und JSON-Metadaten | Ausreichend für wenige Dokumente |
 | Verifikation | Kleine Offline-Tests mit `unittest`; feste Referenzfragen ab Meilenstein 2 | Wiederholbare Prüfungen ohne API-Verbrauch |
 
@@ -46,7 +46,7 @@ Die Einträge werden mit dem jeweils passenden Meilenstein angelegt.
 | .env.example | Konfigurationsnamen mit leeren Beispielwerten |
 | pyproject.toml | Python-Paket und benötigte Abhängigkeiten |
 
-Für Meilenstein 1 genügten Dokumentverarbeitung, CLI und zugehörige Prüfungen. Meilenstein 2 ergänzt Retrieval, Offline-Auswertung und Referenzfragen. Ausführbare Befehle stehen zusammen mit ihrer Implementierung im README.
+Für Meilenstein 1 genügten Dokumentverarbeitung, CLI und zugehörige Prüfungen. Meilenstein 2 ergänzte Retrieval, Offline-Auswertung und Referenzfragen. Meilenstein 3 nutzt `generation.py` mit einem einzelnen HTTP-Aufruf und Quellenprüfung. Ausführbare Befehle stehen zusammen mit ihrer Implementierung im README.
 
 ## Daten und Quellen
 
@@ -60,11 +60,11 @@ Die Quellenprüfung stellt fest, ob eine angeführte Kennung tatsächlich überg
 
 ## Konfiguration und API-Verbrauch
 
-GROQ_API_KEY und GROQ_MODEL werden aus der Umgebung geladen. Die spätere .env.example enthält ausschließlich Platzhalter. Eine lokale .env-Datei wird durch Git ignoriert.
+GROQ_API_KEY und GROQ_MODEL werden aus der Umgebung geladen. Die vorhandene `.env.example` enthält leere Werte. Eine lokale `.env`-Datei wird durch Git ignoriert und nicht automatisch geladen. Vor einem Live-Aufruf bestätigt der Nutzer den Free-Tarif seines Kontos über `GROQ_FREE_TIER_CONFIRMED=1`.
 
-Für den ersten Stand gelten ein maximaler Kontext von 12.000 Zeichen, ein Antwortlimit von etwa 500 Tokens und eine Wartezeit von 30 Sekunden als Startwerte. Das genaue SDK-Feld für die Antwortbegrenzung wird anhand der aktuellen API geprüft. Kontextbudget und Modelllimit werden berücksichtigt. Zeichen und Tokens sind verschiedene Größen, deshalb dokumentiert der Live-Test die Eignung dieser Startwerte.
+Für den ersten Stand gelten ein maximaler Kontext von 12.000 Zeichen, ein Antwortlimit von 500 Completion-Tokens über das dokumentierte API-Feld `max_completion_tokens` und eine Wartezeit von 30 Sekunden. Die Frage ist zusätzlich auf 1.000 Zeichen begrenzt. Zeichen und Tokens sind verschiedene Größen, deshalb prüft ein späterer Live-Test die Eignung dieser Startwerte.
 
-Eine Frage löst höchstens einen Generierungsaufruf aus. Automatische Wiederholungen und Anbieterwechsel bleiben deaktiviert. Ein HTTP-429-Fehler wird als ausgeschöpftes Kontingent beziehungsweise Rate-Limit erklärt. Die Anwendung zeigt vorhandene Suchtreffer weiterhin an.
+Eine Frage löst höchstens einen Generierungsaufruf aus. Der Standardbibliotheks-Client führt keine automatischen Wiederholungen aus; Anbieterwechsel sind nicht implementiert. Ein HTTP-429-Fehler wird als ausgeschöpftes Kontingent beziehungsweise Rate-Limit erklärt. Die Anwendung zeigt vorhandene Suchtreffer weiterhin an.
 
 Die Laufzeit der Anwendung liegt auf dem eigenen Laptop. Der Nutzer wählt ein Konto im kostenlosen Tarif. Die Anwendung kann den Abrechnungsstatus des Kontos nicht zuverlässig aus einem Modellnamen ableiten. Vor dem ersten Live-Aufruf werden kostenlose Verfügbarkeit und Konto-Tarif geprüft und dokumentiert. Kostenlose Kontingente können sich ändern.
 
@@ -84,7 +84,11 @@ Die Evaluation hält Dokumentversion, Fragen, Suchverfahren, Promptversion und b
 
 ## Technische Referenzen
 
-Der Stand wurde am 19. November 2026 gegen die folgenden offiziellen Dokumentationsseiten geprüft. Modellverfügbarkeit und konkrete Kontingente werden beim Implementieren erneut geprüft.
+Der Stand wurde am 24. November 2026 gegen die folgenden offiziellen Dokumentationsseiten geprüft. Das konkrete Nutzerkonto und dessen Kontingente wurden mangels Zugangsdaten noch nicht geprüft.
 
 - [Groq Quickstart](https://console.groq.com/docs/quickstart)
 - [Groq Rate Limits](https://console.groq.com/docs/rate-limits)
+- [Groq Supported Models](https://console.groq.com/docs/models)
+- [Groq Model Deprecation](https://console.groq.com/docs/deprecations)
+- [Groq API Reference](https://console.groq.com/docs/api-reference)
+- [OpenAI Open Models](https://openai.com/open-models/)
